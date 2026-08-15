@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>花間日常｜插花課程與花藝知識</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Noto+Serif+TC:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink:#253126; --cream:#f8f5ed; --paper:#fffdf8; --sage:#71806a; --leaf:#40583e; --pink:#e9c9c1; --line:#dedbd0; --gold:#c69758; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--cream); font-family:"Plus Jakarta Sans","Noto Serif TC",sans-serif; }
+    .wrap { max-width:1180px; margin:auto; padding:0 28px; }
+    .eyebrow { color:#8d7050; font-size:11px; letter-spacing:.17em; text-transform:uppercase; font-weight:700; }
+    h1,h2,h3,p { margin-top:0; }
+    h1,h2,h3 { font-family:"Noto Serif TC",serif; font-weight:600; }
+    .nav { height:78px; display:flex; align-items:center; justify-content:space-between; position:relative; z-index:2; }
+    .logo { text-decoration:none; color:var(--ink); font-family:"Noto Serif TC"; font-size:23px; letter-spacing:.1em; font-weight:700; }
+    .nav-links { display:flex; gap:28px; align-items:center; }
+    .nav-links a { color:var(--ink); text-decoration:none; font-size:14px; font-weight:600; }
+    .nav-links .pill { background:var(--leaf); color:white; border-radius:999px; padding:11px 18px; }
+    .hero { min-height:620px; display:grid; grid-template-columns:1.03fr .97fr; gap:48px; align-items:center; padding:48px 0 82px; }
+    .hero-copy h1 { font-size:clamp(42px,5.1vw,70px); letter-spacing:.04em; line-height:1.22; margin:14px 0 20px; }
+    .hero-copy h1 em { color:#9c6d61; font-style:normal; }
+    .hero-copy p { font-family:"Noto Serif TC"; line-height:2; font-size:16px; max-width:470px; color:#5d695e; }
+    .cta-row { display:flex; gap:14px; margin-top:30px; align-items:center; }
+    .button { display:inline-flex; align-items:center; gap:9px; padding:14px 20px; text-decoration:none; border-radius:999px; font-size:14px; font-weight:700; transition:.2s; }
+    .button:hover { transform:translateY(-2px); }
+    .button-main { background:var(--leaf); color:#fff; }
+    .button-plain { color:var(--leaf); }
+    .hero-photo { height:530px; border-radius:230px 230px 22px 22px; overflow:hidden; position:relative; box-shadow:18px 18px 0 #e9e5d8; }
+    .hero-photo img { width:100%; height:100%; object-fit:cover; }
+    .hero-photo:after { content:"FLOWERS · SLOWLY"; position:absolute; bottom:23px; right:23px; color:white; font-size:10px; letter-spacing:.19em; background:#233527b8; padding:10px 13px; }
+    .marquee { background:var(--leaf); color:#f7f3e9; overflow:hidden; white-space:nowrap; padding:15px 0; font-family:"Noto Serif TC"; font-size:14px; letter-spacing:.11em; }
+    .marquee span { display:inline-block; animation:slide 28s linear infinite; }
+    @keyframes slide { to { transform:translateX(-50%); } }
+    section { padding:104px 0; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:42px; }
+    .section-head h2 { font-size:35px; letter-spacing:.06em; margin:9px 0 0; }
+    .section-head p { max-width:390px; color:#687269; font-family:"Noto Serif TC"; line-height:1.8; margin:0; }
+    .courses { background:var(--paper); }
+    .course-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+    .course { border:1px solid var(--line); padding:11px; background:#fff; transition:.25s; }
+    .course:hover { transform:translateY(-7px); box-shadow:0 15px 34px #55542c15; }
+    .course-img { height:220px; overflow:hidden; }
+    .course-img img { width:100%; height:100%; object-fit:cover; transition:.5s; }
+    .course:hover img { transform:scale(1.06); }
+    .course-body { padding:20px 11px 12px; }
+    .tag { color:#997249; font-size:11px; font-weight:700; letter-spacing:.14em; }
+    .course h3 { font-size:22px; margin:9px 0; }
+    .course p { color:#69736a; line-height:1.65; font-family:"Noto Serif TC"; font-size:14px; margin-bottom:13px; }
+    .meta { border-top:1px solid var(--line); padding-top:13px; font-size:12px; color:#596859; display:flex; justify-content:space-between; }
+    .knowledge { display:grid; grid-template-columns:.85fr 1.15fr; gap:72px; align-items:center; }
+    .circle-img { aspect-ratio:1; border-radius:50%; overflow:hidden; position:relative; }
+    .circle-img img { width:100%; height:100%; object-fit:cover; }
+    .circle-img:after { content:"從一枝花開始\A 慢慢理解植物"; white-space:pre; position:absolute; inset:0; display:grid; place-content:center; text-align:center; color:#fff; background:#2d3d2a73; font-family:"Noto Serif TC"; font-size:20px; line-height:1.8; letter-spacing:.12em; }
+    .knowledge h2 { font-size:38px; line-height:1.45; margin:9px 0 16px; }
+    .knowledge > div > p { color:#657066; font-family:"Noto Serif TC"; line-height:1.9; }
+    .knowledge-list { margin-top:26px; border-top:1px solid var(--line); }
+    .knowledge-item { display:flex; justify-content:space-between; align-items:center; padding:17px 4px; border-bottom:1px solid var(--line); cursor:pointer; font-family:"Noto Serif TC"; font-size:16px; }
+    .knowledge-item b { color:#a77d53; font-family:"Plus Jakarta Sans"; font-size:14px; }
+    .library { background:var(--paper); }
+    .library-intro { max-width:590px; color:#687269; font-family:"Noto Serif TC"; line-height:1.9; margin:-20px 0 28px; }
+    .search-panel { display:flex; gap:10px; margin:0 0 20px; }
+    .search-box { flex:1; display:flex; align-items:center; gap:10px; background:white; border:1px solid var(--line); padding:0 17px; }
+    .search-box span { color:#8c9888; }
+    .search-box input { border:0; outline:0; width:100%; padding:15px 0; color:var(--ink); font:14px "Noto Serif TC"; background:transparent; }
+    .filter { border:1px solid var(--line); background:white; padding:0 15px; color:var(--leaf); font:14px "Noto Serif TC"; outline:0; }
+    .table-wrap { overflow-x:auto; border:1px solid var(--line); background:#fff; }
+    .knowledge-table { width:100%; border-collapse:collapse; min-width:690px; text-align:left; }
+    .knowledge-table th { background:#f0f0e8; padding:15px 18px; color:#576652; font-size:11px; letter-spacing:.12em; }
+    .knowledge-table td { padding:17px 18px; border-top:1px solid #e9e7df; font-family:"Noto Serif TC"; font-size:14px; vertical-align:top; line-height:1.6; }
+    .knowledge-table tr:hover td { background:#fcfaf4; }
+    .knowledge-table td:first-child { color:#987752; font-family:"Plus Jakarta Sans"; font-size:12px; font-weight:700; }
+    .empty-result { padding:35px; color:#748071; text-align:center; font-family:"Noto Serif TC"; display:none; }
+    .result-count { font-size:12px; color:#7d887c; margin:0 0 12px; }
+    .journey { background:#e4e8dc; }
+    .steps { display:grid; grid-template-columns:repeat(4,1fr); position:relative; }
+    .step { padding:0 28px; min-height:210px; border-left:1px solid #adb8a6; }
+    .step:first-child { padding-left:0; border-left:0; }
+    .step-num { display:block; color:#8f7663; font-size:12px; letter-spacing:.12em; margin-bottom:34px; }
+    .step h3 { font-size:20px; margin-bottom:9px; }
+    .step p { color:#61705e; line-height:1.75; font-family:"Noto Serif TC"; font-size:14px; }
+    .testimonial { background:#263a2b; color:#fffdf4; text-align:center; padding:92px 28px; }
+    .quote-mark { color:#dbb588; font-family:"DM Serif Display"; font-size:66px; line-height:.5; }
+    .testimonial blockquote { max-width:750px; font-family:"Noto Serif TC"; letter-spacing:.04em; font-size:clamp(22px,3vw,34px); line-height:1.75; margin:20px auto; }
+    .testimonial small { color:#d5ddd1; letter-spacing:.1em; }
+    .footer { padding:58px 0 25px; background:#1e2f24; color:#e6ebdf; }
+    .footer-top { display:flex; justify-content:space-between; gap:35px; padding-bottom:54px; }
+    .footer h2 { font-size:29px; margin:10px 0; }
+    .footer p { color:#b9c3b7; font-family:"Noto Serif TC"; }
+    .newsletter { display:flex; align-items:center; gap:8px; border-bottom:1px solid #82917e; align-self:center; }
+    .newsletter input { border:0; background:none; padding:12px 2px; color:white; outline:0; min-width:230px; font-family:inherit; }
+    .newsletter button { border:0; background:none; color:#fff; cursor:pointer; font-size:18px; }
+    .copyright { border-top:1px solid #455649; padding-top:21px; font-size:11px; color:#9eab9d; display:flex; justify-content:space-between; }
+    @media(max-width:780px) { .wrap { padding:0 20px; } .nav-links a:not(.pill) { display:none; } .hero { grid-template-columns:1fr; padding-top:25px; } .hero-photo { height:420px; order:-1; } section { padding:68px 0; } .section-head,.knowledge { grid-template-columns:1fr; display:grid; } .course-grid,.steps { grid-template-columns:1fr; } .step { border-left:0; border-top:1px solid #adb8a6; padding:24px 0; min-height:0; } .step:first-child { border-top:0; } .knowledge { gap:38px; } .footer-top,.copyright { display:block; } .newsletter { margin-top:24px; width:max-content; } }
+  </style>
+</head>
+<body>
+  <header class="wrap nav">
+    <a class="logo" href="#top">花間日常</a>
+    <nav class="nav-links"><a href="#courses">課程</a><a href="#library">知識資料庫</a><a href="#journey">學習方式</a><a class="pill" href="#contact">開始你的花藝旅程</a></nav>
+  </header>
+  <main id="top">
+    <div class="wrap hero">
+      <div class="hero-copy"><div class="eyebrow">八德社區大學 · floral course</div><h1>把日常，<br>插成一束<em>喜歡的花。</em></h1><p>八德社區大學插花課程，給第一次拿起花剪的你，也給想更靠近植物的你。從認識一枝花，到完成屬於自己的花藝語言。</p><div class="cta-row"><a class="button button-main" href="#courses">探索所有課程　→</a><a class="button button-plain" href="#knowledge">先逛逛知識庫 ↓</a></div></div>
+      <div class="hero-photo"><img src="https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1000&q=85" alt="自然風花藝作品" /></div>
+    </div>
+    <div class="marquee"><span>　花的名字　✦　色彩的搭配　✦　螺旋花腳　✦　季節的故事　✦　花器的選擇　✦　花的名字　✦　色彩的搭配　✦　螺旋花腳　✦　季節的故事　✦　花器的選擇　✦　</span></div>
+    <section class="courses" id="courses"><div class="wrap"><div class="section-head"><div><div class="eyebrow">choose your first bloom</div><h2>從這裡，開始練習</h2></div><p>不需要有基礎。每一堂課都把看似複雜的技巧，拆成可以從容完成的小步驟。</p></div><div class="course-grid">
+      <article class="course"><div class="course-img"><img src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&w=800&q=80" alt="手綁花束" /></div><div class="course-body"><span class="tag">BEGINNER · 01</span><h3>第一束手綁花</h3><p>認識花材、螺旋花腳與包裝，帶走一束自己親手完成的溫柔。</p><div class="meta"><span>4 個單元</span><span>約 90 分鐘</span></div></div></article>
+      <article class="course"><div class="course-img"><img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=800&q=80" alt="桌花設計" /></div><div class="course-body"><span class="tag">FOUNDATION · 02</span><h3>自然風桌花設計</h3><p>練習留白、線條與重心，做出像在花園裡自然生長的景色。</p><div class="meta"><span>6 個單元</span><span>約 2.5 小時</span></div></div></article>
+      <article class="course"><div class="course-img"><img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=800&q=80" alt="季節花圈" /></div><div class="course-body"><span class="tag">SEASONAL · 03</span><h3>季節花圈練習</h3><p>用當季枝葉與乾燥花，編一個能陪你度過漫長日常的圓滿。</p><div class="meta"><span>5 個單元</span><span>約 2 小時</span></div></div></article>
+    </div></div></section>
+    <section id="knowledge"><div class="wrap knowledge"><div class="circle-img"><img src="https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=900&q=85" alt="盛開的季節花朵" /></div><div><div class="eyebrow">floral field notes</div><h2>不只是插花，<br>也是重新看見生活。</h2><p>我們把課堂裡最實用的提問整理成花藝筆記，讓你隨時回來查找、練習與發現。</p><div class="knowledge-list"><div class="knowledge-item"><span>如何挑選新鮮花材？</span><b>01　↗</b></div><div class="knowledge-item"><span>10 種常見花材的性格與寓意</span><b>02　↗</b></div><div class="knowledge-item"><span>花束配色：從同色系到撞色</span><b>03　↗</b></div><div class="knowledge-item"><span>延長瓶插花期的小祕訣</span><b>04　↗</b></div></div></div></div></section>
+    <section class="library" id="library"><div class="wrap"><div class="section-head"><div><div class="eyebrow">searchable floral library</div><h2>插花知識資料庫</h2></div><p>已整理目前網站教材中的插花知識。輸入花材、技巧或問題，就能快速找到需要的筆記。</p></div><p class="library-intro">例如可搜尋「玫瑰」、「螺旋」、「保鮮」或「配色」。資料表會同時搜尋分類、主題、重點與關鍵字。</p><div class="search-panel"><label class="search-box"><span>⌕</span><input id="knowledge-search" type="search" placeholder="搜尋花材、技巧、關鍵字⋯⋯" autocomplete="off" /></label><select id="category-filter" class="filter" aria-label="知識分類"><option value="">全部分類</option><option>花材</option><option>技巧</option><option>設計</option><option>養護</option></select></div><p class="result-count" id="result-count">顯示 8 筆資料</p><div class="table-wrap"><table class="knowledge-table"><thead><tr><th>分類</th><th>主題</th><th>知識重點</th><th>搜尋關鍵字</th></tr></thead><tbody id="knowledge-rows">
+      <tr data-category="花材"><td>花材</td><td>挑選新鮮花材</td><td>選擇花頭飽滿、莖部挺直、葉片無黃斑的花材；花苞以微開為佳。</td><td>新鮮、花市、花苞、葉片</td></tr>
+      <tr data-category="花材"><td>花材</td><td>主花、配花與線條花</td><td>主花是視覺焦點；配花補足量感；線條花則拉出作品的方向與節奏。</td><td>主花、配花、線條、花材角色</td></tr>
+      <tr data-category="技巧"><td>技巧</td><td>螺旋花腳</td><td>每一枝花以同一方向交叉加入，讓花束形成可站立、易握持的螺旋結構。</td><td>螺旋、手綁花束、交叉、花腳</td></tr>
+      <tr data-category="技巧"><td>技巧</td><td>插花前的處理</td><td>以斜角剪去莖末約 2–3 公分，去除水面下葉片，再立即插入乾淨的水中。</td><td>斜剪、醒花、去葉、吸水</td></tr>
+      <tr data-category="設計"><td>設計</td><td>自然風桌花</td><td>先建立高低錯落的線條，再以主花聚焦；保留空隙，避免每個方向都塞滿花。</td><td>桌花、自然風、留白、重心、線條</td></tr>
+      <tr data-category="設計"><td>設計</td><td>花束配色</td><td>同色系安全柔和；互補色具有張力。先選一個主色，再用 1–2 個輔色平衡畫面。</td><td>配色、同色系、撞色、主色、輔色</td></tr>
+      <tr data-category="養護"><td>養護</td><td>延長瓶插花期</td><td>每天換水、清洗花器並重新斜剪莖末；遠離日照、熱源與成熟水果。</td><td>保鮮、換水、瓶插、修剪、花期</td></tr>
+      <tr data-category="養護"><td>養護</td><td>季節花材的運用</td><td>優先使用當季、在地花材，通常更耐放，也更能呈現自然的季節感。</td><td>季節、在地、耐放、花圈</td></tr>
+    </tbody></table><div id="empty-result" class="empty-result">找不到符合的資料，試試「花材」、「花束」或「保鮮」。</div></div></div></section>
+    <section class="journey" id="journey"><div class="wrap"><div class="section-head"><div><div class="eyebrow">your learning rhythm</div><h2>用自己的步調，學會花藝</h2></div><p>每堂線上課都有清晰引導；你可以暫停、重看，也可以把作品分享給同學。</p></div><div class="steps"><div class="step"><span class="step-num">01</span><h3>挑選一堂課</h3><p>從你的興趣、季節或想送的人開始，找到現在最想完成的作品。</p></div><div class="step"><span class="step-num">02</span><h3>準備花材</h3><p>下載材料清單，在家附近的花市或花店也能安心採買。</p></div><div class="step"><span class="step-num">03</span><h3>跟著影片創作</h3><p>近距離示範每一個手勢，慢慢理解花與花之間的關係。</p></div><div class="step"><span class="step-num">04</span><h3>收藏你的作品</h3><p>上傳成果並收到溫柔回饋，讓每次練習都成為成長的記錄。</p></div></div></div></section>
+    <section class="testimonial"><div class="quote-mark">“</div><blockquote>原來插花不是把花插得漂亮，<br>而是練習感受、取捨，還有留一點空間給自己。</blockquote><small>— 學員 小澄・完成 6 堂花藝課</small></section>
+  </main>
+  <footer class="footer" id="contact"><div class="wrap"><div class="footer-top"><div><div class="eyebrow" style="color:#dbb588">BADE COMMUNITY UNIVERSITY</div><h2>讓花，輕輕走進你的日常。</h2><p>八德社區大學插花課程・訂閱每月花訊，收到季節花材與課程消息。</p></div><form class="newsletter" onsubmit="event.preventDefault();this.querySelector('input').value='謝謝訂閱，花訊即將寄來！';"><input aria-label="電子信箱" type="email" placeholder="你的電子信箱" required><button aria-label="訂閱">→</button></form></div><div class="copyright"><span>© 2026 八德社區大學・花間日常插花課程</span><span>Instagram　｜　YouTube　｜　LINE</span></div></div></footer>
+  <script>
+    const searchInput = document.querySelector('#knowledge-search');
+    const categoryFilter = document.querySelector('#category-filter');
+    const rows = [...document.querySelectorAll('#knowledge-rows tr')];
+    const resultCount = document.querySelector('#result-count');
+    const emptyResult = document.querySelector('#empty-result');
+    function filterKnowledge() {
+      const query = searchInput.value.trim().toLowerCase();
+      const category = categoryFilter.value;
+      let visible = 0;
+      rows.forEach(row => {
+        const matchesText = row.textContent.toLowerCase().includes(query);
+        const matchesCategory = !category || row.dataset.category === category;
+        const show = matchesText && matchesCategory;
+        row.hidden = !show;
+        if (show) visible++;
+      });
+      resultCount.textContent = `顯示 ${visible} 筆資料`;
+      emptyResult.style.display = visible ? 'none' : 'block';
+    }
+    searchInput.addEventListener('input', filterKnowledge);
+    categoryFilter.addEventListener('change', filterKnowledge);
+  </script>
+</body>
+</html>
