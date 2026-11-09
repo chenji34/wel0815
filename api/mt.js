@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-    // 允許所有前端跨域存取
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -30,7 +29,17 @@ export default async function handler(req, res) {
             body: JSON.stringify({ text, dialect })
         });
 
-        const data = await response.json();
+        // 取得原始文字回應，避免直接 parse JSON 失敗崩潰
+        const responseText = await response.text();
+        
+        let data;
+        try {
+            data = JSON.parse(responseText);
+        } catch (e) {
+            // 如果不是合法的 JSON，把原始文字當作錯誤回傳給前端看
+            data = { error: "API 回傳了非 JSON 格式的內容", rawResponse: responseText };
+        }
+
         return res.status(response.status).json(data);
     } catch (error) {
         return res.status(500).json({ error: error.message });
