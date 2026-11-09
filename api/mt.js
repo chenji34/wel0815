@@ -20,30 +20,28 @@ export default async function handler(req, res) {
     const TOKEN = "ghk_2a3229ebcmw0ae6vl00idq6eb17s3gfee";
 
     try {
-        const response = await fetch("curl https://api.gohakka.org/v3/pro/text/translations \
-  --request POST \
-  --header 'Content-Type: multipart/form-data' \
-  --header 'Authorization: Bearer YOUR_SECRET_TOKEN' \
-  --form 'text=' \
-  --form 'dialectCode=sixian' \
-  --form 'targetCode=zh-TW' \
-  --form 'engine=model'", {
+        // 使用原生 FormData 建立正確的 multipart/form-data 請求
+        const formData = new FormData();
+        formData.append('text', text || '');
+        formData.append('dialectCode', dialect || 'sixian');
+        formData.append('targetCode', 'zh-TW');
+        formData.append('engine', 'model');
+
+        const response = await fetch("https://api.gohakka.org/v3/pro/text/translations", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${TOKEN}`,
-                "Content-Type": "application/json"
+                "Authorization": `Bearer ${TOKEN}`
+                // 注意：使用原生 FormData 時，fetch 會自動設定正確的 multipart/form-data 帶 boundary 的 Content-Type
             },
-            body: JSON.stringify({ text, dialect })
+            body: formData
         });
 
-        // 取得原始文字回應，避免直接 parse JSON 失敗崩潰
         const responseText = await response.text();
         
         let data;
         try {
             data = JSON.parse(responseText);
         } catch (e) {
-            // 如果不是合法的 JSON，把原始文字當作錯誤回傳給前端看
             data = { error: "API 回傳了非 JSON 格式的內容", rawResponse: responseText };
         }
 
