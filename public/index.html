@@ -8,15 +8,19 @@
 </head>
 <body class="bg-slate-50 min-h-screen py-10 px-4">
 
-    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        <!-- 頂部標題區 -->
         <div class="bg-blue-600 text-white p-6">
             <h1 class="text-2xl font-bold flex items-center gap-2">
                 <span>📝</span> 客語文章智慧批改與翻譯平台
             </h1>
-            <p class="text-blue-100 mt-1 text-sm">結合 GoHakka Pro API，提供客語智慧糾錯與機器翻譯對照功能。</p>
+            <p class="text-blue-100 mt-1 text-sm">結合 GoHakka Pro API 與智慧糾錯引擎，提供客語錯別字標註、斷詞與拼音對照。</p>
         </div>
 
+        <!-- 主體內容 -->
         <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- 左側：輸入與設定 -->
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">選擇客語腔調</label>
@@ -31,7 +35,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">輸入客語文章</label>
-                    <textarea id="inputText" rows="8" class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none" placeholder="請在此輸入或貼上您的客語文章..."></textarea>
+                    <textarea id="inputText" rows="8" class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none" placeholder="請在此輸入或貼上您的客語文章（例如測試錯字：嘸過、仰安）..."></textarea>
                 </div>
 
                 <button onclick="runHakkaCheck()" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition duration-200 shadow-md flex justify-center items-center gap-2">
@@ -39,20 +43,24 @@
                 </button>
             </div>
 
+            <!-- 右側：分析與結果輸出 -->
             <div class="flex flex-col">
                 <label class="block text-sm font-medium text-slate-700 mb-1">分析與糾錯報告</label>
-                <div id="outputBox" class="flex-1 w-full border border-slate-200 bg-slate-50 rounded-lg p-4 text-slate-700 overflow-y-auto max-h-[350px] whitespace-pre-wrap text-sm">
-                    請在左側輸入文章並點擊「開始分析與批改」以檢視結果。
+                <div id="outputBox" class="flex-1 w-full border border-slate-200 bg-slate-50 rounded-lg p-4 text-slate-700 overflow-y-auto max-h-[450px] text-sm space-y-4">
+                    <p class="text-slate-400 italic">請在左側輸入文章並點擊「開始分析與批改」以檢視結果。</p>
                 </div>
             </div>
+
         </div>
 
+        <!-- 底部資訊 -->
         <div class="bg-slate-100 px-6 py-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
             <span>Powered by GoHakka API</span>
             <a href="https://api.gohakka.org/v3/pro/docs" target="_blank" class="text-blue-600 hover:underline">查看官方 API 文件</a>
         </div>
     </div>
 
+    <!-- JavaScript 邏輯 -->
     <script>
         async function runHakkaCheck() {
             const text = document.getElementById('inputText').value.trim();
@@ -67,25 +75,100 @@
 
             submitBtn.disabled = true;
             submitBtn.innerText = "⏳ 正在分析中...";
-            outputBox.innerText = "正在分析中，請稍候...";
+            outputBox.innerHTML = "<p class='text-blue-600 animate-pulse'>正在向 GoHakka 請求斷詞與智慧糾錯分析...</p>";
 
             try {
-                // 呼叫自身的 Serverless API 端點
                 const response = await fetch("/api/mt", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ text, dialect })
                 });
 
-                const data = await response.json();
+                const result = await response.json();
 
-                if (response.ok) {
-                    outputBox.innerHTML = `✅ **API 回傳分析結果：**\n\n` + JSON.stringify(data, null, 2);
+                if (response.ok && result.success && result.data) {
+                    const { zhTW, hak, pinyin } = result.data;
+                    const proofreading = result.proofreading || { typosCount: 0, typos: [] };
+
+                    // 1. 產生錯別字糾錯卡片區塊
+                    let typosHtml = '';
+                    if (proofreading.typosCount > 0) {
+                        typosHtml = `
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                                <h3 class="font-bold text-red-700 text-sm flex items-center gap-1 mb-2">
+                                    <span>⚠️</span> 發現 ${proofreading.typosCount} 處疑似用字錯誤
+                                </h3>
+                                <ul class="space-y-2 text-xs">
+                        `;
+                        proofreading.typos.forEach(t => {
+                            typosHtml += `
+                                <li class="bg-white p-2 rounded border border-red-100 flex justify-between items-center shadow-xs">
+                                    <div>
+                                        <span class="bg-red-100 text-red-700 font-bold px-1.5 py-0.5 rounded">${t.wrong}</span> 
+                                        ➔ 建議改為 
+                                        <span class="bg-green-100 text-green-700 font-bold px-1.5 py-0.5 rounded">${t.correct}</span>
+                                        <div class="text-slate-500 mt-0.5">${t.description}</div>
+                                    </div>
+                                </li>
+                            `;
+                        });
+                        typosHtml += `</ul></div>`;
+                    } else {
+                        typosHtml = `
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-green-700 text-xs flex items-center gap-1.5">
+                                <span>✅</span> <strong>用字檢查：</strong>未檢出常見口語錯別字，用字標準！
+                            </div>
+                        `;
+                    }
+
+                    // 2. 產生逐詞拼音對照（支援錯字紅字高亮）
+                    let tokensHtml = '<div class="flex flex-wrap gap-1.5 mt-1">';
+                    for (let i = 0; i < hak.length; i++) {
+                        const word = hak[i];
+                        const py = pinyin[i] || '';
+                        
+                        // 檢查該詞是否在錯字清單內
+                        const isTypo = proofreading.typos.some(t => t.wrong === word);
+
+                        if (/^[\p{P}\p{S}]$/u.test(word)) {
+                            tokensHtml += `<span class="text-slate-400 font-bold self-end mb-1">${word}</span>`;
+                        } else if (isTypo) {
+                            tokensHtml += `
+                                <div class="bg-red-50 border border-red-300 rounded px-2 py-1 flex flex-col items-center shadow-xs">
+                                    <span class="text-red-600 font-bold text-base underline decoration-red-500 decoration-2">${word}</span>
+                                    <span class="text-red-400 text-[10px] font-mono">${py}</span>
+                                </div>
+                            `;
+                        } else {
+                            tokensHtml += `
+                                <div class="bg-white border border-slate-200 rounded px-2 py-1 flex flex-col items-center shadow-xs">
+                                    <span class="text-slate-900 font-medium text-base">${word}</span>
+                                    <span class="text-slate-400 text-[10px] font-mono">${py}</span>
+                                </div>
+                            `;
+                        }
+                    }
+                    tokensHtml += '</div>';
+
+                    // 3. 組合最終呈現畫面
+                    outputBox.innerHTML = `
+                        <div class="space-y-4">
+                            ${typosHtml}
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1"><span>🌐</span> 華語語意對照</h3>
+                                <p class="bg-blue-50 border border-blue-100 p-3 rounded-lg text-slate-700 mt-1">${zhTW}</p>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1"><span>✂️</span> 詞彙斷詞與拼音解析（紅字為建議修正字）</h3>
+                                ${tokensHtml}
+                            </div>
+                        </div>
+                    `;
                 } else {
-                    outputBox.innerHTML = `❌ **請求失敗 (${response.status})：**\n\n` + JSON.stringify(data, null, 2);
+                    outputBox.innerHTML = `<pre class="text-red-500 whitespace-pre-wrap">${JSON.stringify(result, null, 2)}</pre>`;
                 }
             } catch (error) {
-                outputBox.innerText = "⚠️ 發生網路連線錯誤：" + error.message;
+                outputBox.innerHTML = `<span class="text-red-500">⚠️ 發生錯誤：${error.message}</span>`;
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerText = "🚀 開始分析與批改";
