@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/api/mt", "destination": "/api/mt.js" }
+  ]
+}
