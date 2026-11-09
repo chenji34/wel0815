@@ -20,7 +20,14 @@ export default async function handler(req, res) {
     const TOKEN = "ghk_2a3229ebcmw0ae6vl00idq6eb17s3gfee";
 
     try {
-        const response = await fetch("https://api.gohakka.org/v3/pro/mt", {
+        const response = await fetch("curl https://api.gohakka.org/v3/pro/text/translations \
+  --request POST \
+  --header 'Content-Type: multipart/form-data' \
+  --header 'Authorization: Bearer YOUR_SECRET_TOKEN' \
+  --form 'text=' \
+  --form 'dialectCode=sixian' \
+  --form 'targetCode=zh-TW' \
+  --form 'engine=model'", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${TOKEN}`,
