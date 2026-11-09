@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客語文章智慧批改與翻譯平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen py-10 px-4">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-blue-600 text-white p-6">
+            <h1 class="text-2xl font-bold flex items-center gap-2">
+                <span>📝</span> 客語文章智慧批改與翻譯平台
+            </h1>
+            <p class="text-blue-100 mt-1 text-sm">結合 GoHakka Pro API，提供客語智慧糾錯與機器翻譯對照功能。</p>
+        </div>
+
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">選擇客語腔調</label>
+                    <select id="dialectSelect" class="w-full border border-slate-300 rounded-lg p-2.5 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <option value="sixian">四縣腔</option>
+                        <option value="hailu">海陸腔</option>
+                        <option value="dabu">大埔腔</option>
+                        <option value="raoping">饒平腔</option>
+                        <option value="zaoan">詔安腔</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">輸入客語文章</label>
+                    <textarea id="inputText" rows="8" class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none" placeholder="請在此輸入或貼上您的客語文章..."></textarea>
+                </div>
+
+                <button onclick="runHakkaCheck()" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition duration-200 shadow-md flex justify-center items-center gap-2">
+                    <span>🚀</span> 開始分析與批改
+                </button>
+            </div>
+
+            <div class="flex flex-col">
+                <label class="block text-sm font-medium text-slate-700 mb-1">分析與糾錯報告</label>
+                <div id="outputBox" class="flex-1 w-full border border-slate-200 bg-slate-50 rounded-lg p-4 text-slate-700 overflow-y-auto max-h-[350px] whitespace-pre-wrap text-sm">
+                    請在左側輸入文章並點擊「開始分析與批改」以檢視結果。
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-100 px-6 py-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
+            <span>Powered by GoHakka API</span>
+            <a href="https://api.gohakka.org/v3/pro/docs" target="_blank" class="text-blue-600 hover:underline">查看官方 API 文件</a>
+        </div>
+    </div>
+
+    <script>
+        async function runHakkaCheck() {
+            const text = document.getElementById('inputText').value.trim();
+            const dialect = document.getElementById('dialectSelect').value;
+            const outputBox = document.getElementById('outputBox');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (!text) {
+                alert("請先輸入需要批改的客語文章！");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "⏳ 正在分析中...";
+            outputBox.innerText = "正在分析中，請稍候...";
+
+            try {
+                // 呼叫自身的 Serverless API 端點
+                const response = await fetch("/api/mt", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text, dialect })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    outputBox.innerHTML = `✅ **API 回傳分析結果：**\n\n` + JSON.stringify(data, null, 2);
+                } else {
+                    outputBox.innerHTML = `❌ **請求失敗 (${response.status})：**\n\n` + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                outputBox.innerText = "⚠️ 發生網路連線錯誤：" + error.message;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "🚀 開始分析與批改";
+            }
+        }
+    </script>
+</body>
+</html>
