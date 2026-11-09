@@ -20,7 +20,6 @@ export default async function handler(req, res) {
     const TOKEN = "ghk_2a3229ebcmw0ae6vl00idq6eb17s3gfee";
 
     try {
-        // 使用原生 FormData 建立正確的 multipart/form-data 請求
         const formData = new FormData();
         formData.append('text', text || '');
         formData.append('dialectCode', dialect || 'sixian');
@@ -31,21 +30,50 @@ export default async function handler(req, res) {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${TOKEN}`
-                // 注意：使用原生 FormData 時，fetch 會自動設定正確的 multipart/form-data 帶 boundary 的 Content-Type
             },
             body: formData
         });
 
         const responseText = await response.text();
-        
-        let data;
+        let apiData;
         try {
-            data = JSON.parse(responseText);
+            apiData = JSON.parse(responseText);
         } catch (e) {
-            data = { error: "API 回傳了非 JSON 格式的內容", rawResponse: responseText };
+            return res.status(response.status).json({ error: "API 回傳了非 JSON 格式的內容", rawResponse: responseText });
         }
 
-        return res.status(response.status).json(data);
+        // 💡 客語常見錯別字與不標準用字檢核字典（可依需求擴充）
+        const typoRules = [
+            { wrong: "嘸過", correct: "毋過", desc: "表示轉折，教育部標準字應為「毋過」" },
+            { wrong: "無過", correct: "毋過", desc: "表示轉折，教育部標準字應為「毋過」" },
+            { wrong: "仰安", correct: "仰般", desc: "詢問如何、怎樣，應使用「仰般」" },
+            { wrong: "按呢", correct: "恁呢", desc: "這樣、如此之意，標準客語多用「恁呢」" },
+            { wrong: "知影", correct: "知", desc: "部分腔調口語常說知影，正式書寫建議用「知」或對應辭典用字" }
+        ];
+
+        let detectedTypos = [];
+        if (text) {
+            typoRules.forEach(rule => {
+                if (text.includes(rule.wrong)) {
+                    detectedTypos.push({
+                        wrong: rule.wrong,
+                        correct: rule.correct,
+                        description: rule.desc
+                    });
+                }
+            });
+        }
+
+        // 將翻譯結果與錯別字檢核結果合併回傳
+        const finalResult = {
+            ...apiData,
+            proofreading: {
+                typosCount: detectedTypos.length,
+                typos: detectedTypos
+            }
+        };
+
+        return res.status(200).json(finalResult);
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
